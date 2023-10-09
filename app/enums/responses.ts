@@ -6,4 +6,5 @@ export enum Responses {
   PASSWORD_TYPE_ERROR = 'Password must be a string',
   ID_REQUIRED = 'ID is required',
   ID_TYPE_ERROR = 'ID must be a string',
+  NO_DATA_BY_ID = 'No data found against this id',
 }

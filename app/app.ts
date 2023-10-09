@@ -5,9 +5,11 @@ import crypto from 'crypto';
 import Course from './course';
 import AppRoutes from './src/app.routes';
 import { HandleHTTPErrors, HandleGeneralErrors } from './middlewares/error.middleware';
+import MySQLConnection from './connections/mysql/mysqlConnect';
 
 const app = express();
 dotenv.config();
+
 // const router = express.Router();
 
 app.use(express.urlencoded({ extended: true }))

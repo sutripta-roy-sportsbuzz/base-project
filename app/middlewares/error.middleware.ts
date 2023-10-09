@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 
 import { HttpException } from '../libraries/HttpException';
 import { Responses } from '../enums/responses';
+import SentryConnection from '../connections/sentry';
 // import logger from '@logging/winstonLogger';
 
 const HandleHTTPErrors = (err: HttpException, req: Request, res: Response, next: NextFunction) => {
@@ -21,8 +22,11 @@ const HandleHTTPErrors = (err: HttpException, req: Request, res: Response, next:
 
 const HandleGeneralErrors = (err: any, _req: any, res: Response, _next: NextFunction) => {
   console.log(err);
-  // if (process.env.NODE_ENV === 'production') Sentry.captureMessage(err);
-  // Sentry.captureMessage(err);
+  if (process.env.NODE_ENV === 'production') {
+    // sentry
+    const Sentry = SentryConnection.createSentryConnection();
+    Sentry.captureMessage(err);
+  }
   return res.status(500).send({ success: false, error: Responses.INTERNAL_SERVER_ERROR })
 }
 

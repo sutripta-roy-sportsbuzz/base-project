@@ -1,13 +1,16 @@
 import { Response, Request, NextFunction } from 'express';
 
 export default class BaseController {
-  constructor() {
+  public service: any;
 
+  constructor(Service: any) {
+    this.service = new Service();
   }
 
   public create = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      return res.status(201).json({ success: true, data: 'result from v1 create' });
+      const result = await this.service.create(req.body);
+      return res.status(201).json({ success: true, data: result });
     } catch (err) {
       next(err);
     }
@@ -15,7 +18,9 @@ export default class BaseController {
 
   public getById = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      return res.status(200).json({ success: true, data: 'result from v1 get' });
+      const id: number = Number((req.params as any).id);
+      const result = await this.service.getById(id);
+      return res.status(200).json({ success: true, data: result });
     } catch (err) {
       next(err);
     }
@@ -23,7 +28,9 @@ export default class BaseController {
 
   public updateById = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      return res.status(200).json({ success: true, data: 'result from v1 patch' });
+      const id: number = Number((req.params as any).id);
+      const result = await this.service.updateById(id, req.body);
+      return res.status(200).json({ success: true, data: result });
     } catch (err) {
       next(err);
     }
@@ -31,7 +38,9 @@ export default class BaseController {
 
   public deleteById = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      return res.status(200).json({ success: true, data: 'result from v1 delete' });
+      const id: number = Number((req.params as any).id);
+      await this.service.deleteById(id);
+      return res.status(200).json({ success: true });
     } catch (err) {
       next(err);
     }

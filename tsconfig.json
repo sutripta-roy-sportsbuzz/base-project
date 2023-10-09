@@ -110,9 +110,9 @@
   },
   "exclude": [
     "node_modules",
-    "dist"
+    "dist/**/*"
   ],
   "include": [
-    "./app/**/*", "migrations",
+    "./app/**/*",
   ]
 }

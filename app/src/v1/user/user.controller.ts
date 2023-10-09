@@ -2,10 +2,11 @@ import { Response, Request, NextFunction } from 'express';
 
 import BaseController from '../../base/base.controller';
 // import { BaseController } from '@sutriptaroy/base-package';
+import UserService from './user.service';
 
 export default class UserController extends BaseController {
   constructor() {
-    super()
+    super(UserService)
   }
 
   public login = async (req: Request, res: Response, next: NextFunction) => {
