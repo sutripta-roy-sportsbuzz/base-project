@@ -1,11 +1,10 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import crypto from 'crypto';
+// import crypto from 'crypto';
 
-import Course from './course';
+// import Course from './course';
 import AppRoutes from './src/app.routes';
 import { HandleHTTPErrors, HandleGeneralErrors } from './middlewares/error.middleware';
-import MySQLConnection from './connections/mysql/mysqlConnect';
 
 const app = express();
 dotenv.config();
