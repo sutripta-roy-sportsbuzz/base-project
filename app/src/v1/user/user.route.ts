@@ -1,5 +1,6 @@
 import UserController from './user.controller';
 import BaseRouter from '../../base/base.routes';
+// import { BaseRouter } from '@sutriptaroy/base-package';
 import { createSchema, identitySchema } from './user.dto';
 
 export default class UserRouterV1 extends BaseRouter {

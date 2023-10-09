@@ -1,8 +1,8 @@
 {
-  "name": "sequelize-structure",
+  "name": "base-project",
   "version": "1.0.0",
-  "description": "Basic structure of sequelize",
-  "main": "app/server.js",
+  "description": "Basic structure for Typescript Project",
+  "main": "app/server.ts",
   "scripts": {
     "test": "npm run clean && npm run build && cross-env NODE_ENV=test jest --testTimeout=10000 --detectOpenHandles --silent=false --forceExit",
     "nodemon": "nodemon --transpile-only ./app/server.ts",

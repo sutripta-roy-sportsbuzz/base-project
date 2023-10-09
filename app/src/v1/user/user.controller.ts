@@ -1,6 +1,7 @@
 import { Response, Request, NextFunction } from 'express';
 
 import BaseController from '../../base/base.controller';
+// import { BaseController } from '@sutriptaroy/base-package';
 
 export default class UserController extends BaseController {
   constructor() {
