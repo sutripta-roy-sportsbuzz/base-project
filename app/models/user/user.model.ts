@@ -2,6 +2,8 @@ import { DataTypes, Model, Optional } from 'sequelize';
 
 import { sequelize } from '../../connections/sequelize/db_config';
 import { BaseModelAttributes } from '../../interfaces/baseAttributes';
+import { AppConstants } from '../../configs/constants';
+import { UserStatus } from '../../enums/common';
 
 export interface UserAttributes extends BaseModelAttributes {
   username: string;
@@ -29,6 +31,7 @@ UserModel.init(
     password: { type: DataTypes.STRING(200), allowNull: false },
     contact: { type: DataTypes.STRING(10), allowNull: true },
     email_id: { type: DataTypes.STRING(50), allowNull: true },
+    status: { type: DataTypes.ENUM({ values: AppConstants.USER_STATUS }), allowNull: false, defaultValue: UserStatus.ACTIVE },
   },
   {
     sequelize: sequelize,

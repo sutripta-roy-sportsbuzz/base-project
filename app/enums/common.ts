@@ -14,3 +14,11 @@ export enum HTTPStatus {
   RESOURCE_EXIST = 409,
   TOO_MANY_REQUEST = 429
 }
+
+export enum UserStatus {
+  ACTIVE = 'active',
+  PENDING = 'pending',
+  BLOCKED = 'blocked',
+  REJECTED = 'rejected',
+  CLOSED = 'closed',
+}

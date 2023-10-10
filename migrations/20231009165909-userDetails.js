@@ -32,6 +32,11 @@ module.exports = {
         type: Sequelize.STRING(50),
         allowNull: true,
       },
+      status: {
+        type: Sequelize.ENUM({ values: ['active', 'pending', 'blocked', 'rejected', 'closed'] }),
+        allowNull: false,
+        defaultValue: 'active',
+      },
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
@@ -69,6 +74,10 @@ module.exports = {
       },
       city: {
         type: Sequelize.STRING(50),
+        allowNull: true,
+      },
+      image_url: {
+        type: Sequelize.STRING(500),
         allowNull: true,
       },
       created_at: {

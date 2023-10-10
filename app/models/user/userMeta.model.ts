@@ -30,6 +30,7 @@ UserMetaModel.init(
     user_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'users', key: 'id' } },
     name: { type: DataTypes.STRING(70), allowNull: true },
     city: { type: DataTypes.STRING(50), allowNull: true },
+    image_url: { type: DataTypes.STRING(500), allowNull: true },
   },
   {
     sequelize: sequelize,
