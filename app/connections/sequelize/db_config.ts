@@ -1,19 +1,19 @@
 import { Dialect } from 'sequelize';
 
 import MySQLConnection from './sequelizeConnect';
-import { config } from '../../configs/config';
+import { AppConfig } from '../../configs/config';
 
-const mySQLConnection = MySQLConnection.createMySQLConnection(config.SQL_DB_NAME, config.SQL_DB_USERNAME, config.SQL_DB_PASSWORD, {
+const mySQLConnection = MySQLConnection.createMySQLConnection(AppConfig.SQL_DB_NAME, AppConfig.SQL_DB_USERNAME, AppConfig.SQL_DB_PASSWORD, {
   logging: false,
-  host: config.SQL_DB_HOST,
-  port: config.SQL_DB_PORT,
-  dialect: config.SQL_DIALECT as Dialect,
+  host: AppConfig.SQL_DB_HOST,
+  port: AppConfig.SQL_DB_PORT,
+  dialect: AppConfig.SQL_DIALECT as Dialect,
   timezone: '+05:30',
   pool: {
-    max: config.SQL_MAX_POOL,
-    min: config.SQL_MIN_POOL,
-    acquire: config.SQL_AQUIRE,
-    idle: config.SQL_IDLE,
+    max: AppConfig.SQL_MAX_POOL,
+    min: AppConfig.SQL_MIN_POOL,
+    acquire: AppConfig.SQL_AQUIRE,
+    idle: AppConfig.SQL_IDLE,
   },
 });
 const Sequelize = mySQLConnection.Sequelize;

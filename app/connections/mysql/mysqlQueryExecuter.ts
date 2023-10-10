@@ -1,5 +1,5 @@
 // import MySQLConnection from './mysqlConnect';
-// import { config } from '../../configs/config';
+// import { AppConfig } from '../../configs/config';
 
 // export default class MySQLQueryExecuter {
 //   private connection: any;
@@ -37,7 +37,7 @@
 //     return sql.trim().toUpperCase().startsWith('SELECT');
 //   }
 
-//   query(sql: string, args: any, timeout = config.SQL_MAX_TIMEOUT) {
+//   query(sql: string, args: any, timeout = AppConfig.SQL_MAX_TIMEOUT) {
 //     if (this.isSelectQuery(sql)) {
 //       sql = sql.replace(/SELECT/i, `SELECT /*+ MAX_EXECUTION_TIME(${timeout}) */`)
 //     }
