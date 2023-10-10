@@ -1,16 +1,23 @@
 import { Response, Request, NextFunction } from 'express';
 
+import { Responses } from '../../enums/responses';
+
 export default class BaseController {
   public service: any;
+  public responseParser: any;
+  public moduleName: any;
 
-  constructor(Service: any) {
+  constructor(Service: any, responseParser: any, moduleName: string = '') {
     this.service = new Service();
+    this.responseParser = responseParser;
+    this.moduleName = moduleName;
   }
 
   public create = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await this.service.create(req.body);
-      return res.status(201).json({ success: true, data: result });
+      let result = await this.service.create(req.body);
+      result = this.responseParser.parse(result);
+      return res.status(201).json({ success: true, message: `${this.moduleName} ${Responses.CREATION_SUCCESS}`.trim(), data: result });
     } catch (err) {
       next(err);
     }
@@ -19,8 +26,9 @@ export default class BaseController {
   public getById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id: number = Number((req.params as any).id);
-      const result = await this.service.getById(id);
-      return res.status(200).json({ success: true, data: result });
+      let result = await this.service.getById(id);
+      result = this.responseParser.parse(result);
+      return res.status(200).json({ success: true, message: `${this.moduleName} ${Responses.FETCH_SUCCESS}`.trim(), data: result });
     } catch (err) {
       next(err);
     }
@@ -29,8 +37,9 @@ export default class BaseController {
   public updateById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id: number = Number((req.params as any).id);
-      const result = await this.service.updateById(id, req.body);
-      return res.status(200).json({ success: true, data: result });
+      let result = await this.service.updateById(id, req.body);
+      result = this.responseParser.parse(result);
+      return res.status(200).json({ success: true, message: `${this.moduleName} ${Responses.UPDATION_SUCCESS}`.trim(), data: result });
     } catch (err) {
       next(err);
     }
@@ -40,7 +49,7 @@ export default class BaseController {
     try {
       const id: number = Number((req.params as any).id);
       await this.service.deleteById(id);
-      return res.status(200).json({ success: true });
+      return res.status(200).json({ success: true, message: `${this.moduleName} ${Responses.DELETION_SUCCESS}`.trim() });
     } catch (err) {
       next(err);
     }

@@ -8,6 +8,9 @@ import { UserStatus } from '../../enums/common';
 export interface UserAttributes extends BaseModelAttributes {
   username: string;
   password: string;
+  contact: string;
+  email_id: string;
+  status: UserStatus;
 }
 
 export interface UserModelInput extends Optional<UserAttributes, 'id' | 'created_at' | 'updated_at' | 'deleted_at'> {}
@@ -18,6 +21,7 @@ class UserModel extends Model {
   declare password: string;
   declare contact: string;
   declare email_id: string;
+  declare status: UserStatus;
 
   declare readonly created_at: Date;
   declare readonly updated_at: Date;
@@ -38,6 +42,8 @@ UserModel.init(
     paranoid: true,
     modelName: 'users',
     timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
     deletedAt: 'deleted_at',
   },
 );

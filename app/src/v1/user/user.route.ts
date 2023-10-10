@@ -1,7 +1,7 @@
 import UserController from './user.controller';
 import BaseRouter from '../../base/base.routes';
 // import { BaseRouter } from '@sutriptaroy/base-package';
-import { createSchema, identitySchema } from './user.dto';
+import { createSchema, identitySchema, userUpdationSchema } from './user.dto';
 
 export default class UserRouterV1 extends BaseRouter {
   constructor() {
@@ -15,8 +15,8 @@ export default class UserRouterV1 extends BaseRouter {
         validationKey: 'params'
       },
       patch: {
-        validationSchema: identitySchema,
-        validationKey: 'params'
+        validationSchema: [ identitySchema, userUpdationSchema ],
+        validationKey: [ 'params', 'body' ]
       },
       delete: {
         validationSchema: identitySchema,

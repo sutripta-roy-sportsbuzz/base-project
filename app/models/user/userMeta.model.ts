@@ -6,8 +6,8 @@ import { BaseModelAttributes } from '../../interfaces/baseAttributes';
 export interface UserMetaAtributes extends BaseModelAttributes {
   user_id: number;
   name: string;
-  address: string;
-  contact: string;
+  city: string;
+  image_url: string;
 }
 
 export interface UserMetaModelInput extends Optional<UserMetaAtributes, 'id' | 'created_at' | 'updated_at' | 'deleted_at'> {}
@@ -17,7 +17,8 @@ class UserMetaModel extends Model {
   declare id: number;
   declare user_id: number;
   declare name: string;
-  declare address: string;
+  declare city: string;
+  declare image_url: string;
 
   declare readonly created_at: Date;
   declare readonly updated_at: Date;
@@ -37,6 +38,8 @@ UserMetaModel.init(
     paranoid: true,
     modelName: 'user_meta',
     timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
     deletedAt: 'deleted_at',
   },
 );
