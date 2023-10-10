@@ -20,4 +20,5 @@ export enum Responses {
   FETCH_SUCCESS = 'Fetched Successfully',
   UPDATION_SUCCESS = 'Updated Successfully',
   DELETION_SUCCESS = 'Deleted Successfully',
+  SOMETHING_WENT_WRONG = 'Something went wrong',
 }
