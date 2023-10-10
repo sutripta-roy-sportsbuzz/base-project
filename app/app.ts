@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 // import Course from './course';
 import AppRoutes from './src/app.routes';
 import { HandleHTTPErrors, HandleGeneralErrors } from './middlewares/error.middleware';
+import MongoConnector from './connections/mongoDB/mongoConnector';
 
 const app = express();
 dotenv.config();
@@ -13,6 +14,7 @@ dotenv.config();
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+MongoConnector.getMongoConnection();
 
 // const apiRouting = router.post('/registration', (req, res) => {
 //   const { username, password } = req.body;

@@ -15,4 +15,5 @@ export class AppConfig {
   static readonly SQL_MAX_TIMEOUT = process.env.SQL_MAX_TIMEOUT || 5000;
   static readonly SQL_AQUIRE = process.env.SQL_AQUIRE;
   static readonly SQL_IDLE = process.env.SQL_IDLE;
+  static readonly MONGO_DB_URL = String(process.env.MONGO_DB_URL);
 }

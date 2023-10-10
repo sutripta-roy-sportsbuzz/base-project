@@ -1,7 +1,8 @@
 import { Transaction } from 'sequelize';
 
 export default class BaseSequelizeDao<InputT, OutputT> {
-  model: any;
+  public model: any;
+
   constructor(model: any) {
     this.model = model;
   }

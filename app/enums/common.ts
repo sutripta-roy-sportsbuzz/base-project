@@ -22,3 +22,8 @@ export enum UserStatus {
   REJECTED = 'rejected',
   CLOSED = 'closed',
 }
+
+export enum LoginStatus {
+  SUCCESSFUL = 'successful',
+  FAILED = 'failed',
+}

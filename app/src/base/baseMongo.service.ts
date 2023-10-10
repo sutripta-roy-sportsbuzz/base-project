@@ -1,8 +1,10 @@
+import { ObjectId } from 'mongodb';
+
 import { HttpException } from '../../libraries/HttpException';
 import { HTTPStatus } from '../../enums/common';
 import { Responses } from '../../enums/responses';
 
-export default class BaseService<AttributesInputT, AttributesOutputT> {
+export default class BaseMongoService<AttributesInputT, AttributesOutputT> {
   public dao: any;
 
   constructor(Dao: any) {
@@ -15,7 +17,7 @@ export default class BaseService<AttributesInputT, AttributesOutputT> {
   };
 
   public getById = async (id: number): Promise<AttributesOutputT> => {
-    const result: AttributesOutputT = await this.dao.getById(id);
+    const result: AttributesOutputT = await this.dao.findById(id);
     if (!result) throw new HttpException(HTTPStatus.NOT_FOUND, Responses.NO_DATA_BY_ID);
     return result;
   };
@@ -25,13 +27,13 @@ export default class BaseService<AttributesInputT, AttributesOutputT> {
     const result = await this.getById(id);
     if (!result) throw new HttpException(HTTPStatus.NOT_FOUND, Responses.NO_DATA_BY_ID);
 
-    const updatedResult = await this.dao.updateById(id, payload);
+    const updatedResult = await this.dao.findOneAndUpdate({ _id: new ObjectId(id) }, payload);
     return updatedResult;
   };
 
   public deleteById = async (id: number): Promise<number> => {
     const result = await this.dao.getById(id);
     if (!result) throw new HttpException(HTTPStatus.NOT_FOUND, Responses.NO_DATA_BY_ID);
-    return this.dao.deleteById(id);
+    return this.dao.deleteOne({ _id: new ObjectId(id) });
   };
 }
