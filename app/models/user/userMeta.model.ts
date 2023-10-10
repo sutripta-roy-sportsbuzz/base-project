@@ -18,7 +18,6 @@ class UserMetaModel extends Model {
   declare user_id: number;
   declare name: string;
   declare address: string;
-  declare contact: string;
 
   declare readonly created_at: Date;
   declare readonly updated_at: Date;
@@ -29,9 +28,8 @@ UserMetaModel.init(
   {
     id: { allowNull: false, autoIncrement: true, primaryKey: true, type: DataTypes.INTEGER },
     user_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: 'users', key: 'id' } },
-    name: { type: DataTypes.STRING(40), allowNull: true },
-    address: { type: DataTypes.STRING(200), allowNull: true },
-    contact: { type: DataTypes.STRING(10), allowNull: true },
+    name: { type: DataTypes.STRING(70), allowNull: true },
+    city: { type: DataTypes.STRING(50), allowNull: true },
   },
   {
     sequelize: sequelize,

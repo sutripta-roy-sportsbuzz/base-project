@@ -21,8 +21,16 @@ module.exports = {
         allowNull: false,
       },
       password: {
-        type: Sequelize.STRING(80),
+        type: Sequelize.STRING(200),
         allowNull: false,
+      },
+      contact: {
+        type: Sequelize.STRING(10),
+        allowNull: true,
+      },
+      email_id: {
+        type: Sequelize.STRING(50),
+        allowNull: true,
       },
       created_at: {
         type: Sequelize.DATE,
@@ -56,15 +64,11 @@ module.exports = {
         },
       },
       name: {
-        type: Sequelize.STRING(40),
+        type: Sequelize.STRING(70),
         allowNull: true,
       },
-      address: {
-        type: Sequelize.STRING(200),
-        allowNull: true,
-      },
-      contact: {
-        type: Sequelize.STRING(10),
+      city: {
+        type: Sequelize.STRING(50),
         allowNull: true,
       },
       created_at: {

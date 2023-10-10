@@ -14,6 +14,8 @@ export interface UserModelOutput extends Required<UserAttributes> {}
 class UserModel extends Model {
   declare username: string;
   declare password: string;
+  declare contact: string;
+  declare email_id: string;
 
   declare readonly created_at: Date;
   declare readonly updated_at: Date;
@@ -24,7 +26,9 @@ UserModel.init(
   {
     id: { allowNull: false, autoIncrement: true, primaryKey: true, type: DataTypes.INTEGER },
     username: { type: DataTypes.STRING(24), allowNull: false },
-    password: { type: DataTypes.STRING(80), allowNull: false }
+    password: { type: DataTypes.STRING(200), allowNull: false },
+    contact: { type: DataTypes.STRING(10), allowNull: true },
+    email_id: { type: DataTypes.STRING(50), allowNull: true },
   },
   {
     sequelize: sequelize,
