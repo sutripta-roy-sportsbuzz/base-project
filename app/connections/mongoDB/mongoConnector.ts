@@ -1,7 +1,7 @@
 import MongoDBConnection from './mongoDbConnection';
 
 export default class MongoConnector {
-  static getMongoConnection() {
+  getMongoConnection() {
     return MongoDBConnection.createMongoDBConnection();
   }
 }

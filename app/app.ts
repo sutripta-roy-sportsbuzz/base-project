@@ -14,7 +14,7 @@ dotenv.config();
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
-MongoConnector.getMongoConnection();
+new MongoConnector().getMongoConnection();
 
 // const apiRouting = router.post('/registration', (req, res) => {
 //   const { username, password } = req.body;
