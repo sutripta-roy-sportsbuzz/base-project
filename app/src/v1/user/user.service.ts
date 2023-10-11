@@ -1,4 +1,4 @@
-import BaseService from '../../base/base.service';
+import BaseService from '../../base/baseSequelize.service';
 import UserDao from './user.dao';
 import { UserModelInput, UserModelOutput } from '../../../models/user/user.model';
 
