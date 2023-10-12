@@ -4,23 +4,23 @@ import { Responses } from '../../enums/responses';
 import { AppConstants } from 'configs/constants';
 
 export default class BaseSequelizeService<AttributesInputT, AttributesOutputT> {
-  public dao: any;
-  public cacheEnabled: boolean = false;
-  public cacheClassObject: any;
+  public sequelizeDao: any;
   public moduleName: any;
+  public cacheEnabled: boolean = false;
+  public redisDao: any;
 
-  constructor(Dao: any, moduleName: string, RedisDao: any | null = null) {
-    this.dao = new Dao();
+  constructor(SequelizeDao: any, moduleName: string, RedisDao: any | null = null) {
+    this.sequelizeDao = new SequelizeDao();
     this.moduleName = moduleName;
     this.cacheEnabled = AppConstants.MODULE_WITH_CACHE[this.moduleName.toUpperCase() as keyof object] ? true : false;
 
     if (this.cacheEnabled) {
-      this.cacheClassObject = new RedisDao()
+      this.redisDao = new RedisDao()
     }
   }
 
   public create = async (payload: AttributesInputT): Promise<AttributesOutputT> => {
-    const result: AttributesOutputT = await this.dao.create(payload);
+    const result: AttributesOutputT = await this.sequelizeDao.create(payload);
     if (this.cacheEnabled) {
       this.createCacheWithRedis(result)
     }
@@ -34,7 +34,7 @@ export default class BaseSequelizeService<AttributesInputT, AttributesOutputT> {
         return JSON.parse(result)
       }
     }
-    const result: AttributesOutputT = await this.dao.getById(id);
+    const result: AttributesOutputT = await this.sequelizeDao.getById(id);
     if (!result) throw new HttpException(HTTPStatus.NOT_FOUND, Responses.NO_DATA_BY_ID);
     if (this.cacheEnabled && useCache) {
       this.createCacheWithRedis(result)
@@ -47,7 +47,7 @@ export default class BaseSequelizeService<AttributesInputT, AttributesOutputT> {
     const result = await this.getById(id, false);
     if (!result) throw new HttpException(HTTPStatus.NOT_FOUND, Responses.NO_DATA_BY_ID);
 
-    const updatedResult = await this.dao.updateById(id, payload);
+    const updatedResult = await this.sequelizeDao.updateById(id, payload);
     if (this.cacheEnabled) {
       this.deleteCacheWithRedis(id)
       this.createCacheWithRedis(updatedResult)
@@ -56,9 +56,9 @@ export default class BaseSequelizeService<AttributesInputT, AttributesOutputT> {
   };
 
   public deleteById = async (id: number): Promise<number> => {
-    const result = await this.dao.getById(id, false);
+    const result = await this.sequelizeDao.getById(id, false);
     if (!result) throw new HttpException(HTTPStatus.NOT_FOUND, Responses.NO_DATA_BY_ID);
-    const deleted = await this.dao.deleteById(id);
+    const deleted = await this.sequelizeDao.deleteById(id);
     if (this.cacheEnabled) {
       this.deleteCacheWithRedis(id)
     }
@@ -66,14 +66,14 @@ export default class BaseSequelizeService<AttributesInputT, AttributesOutputT> {
   };
 
   private createCacheWithRedis = (result: any) => {
-    this.cacheClassObject.createWithHash(this.moduleName, result.id, JSON.stringify(result));
+    this.redisDao.createWithHash(this.moduleName, result.id, JSON.stringify(result));
   }
 
   private getCacheWithRedis = (id: number) => {
-    return this.cacheClassObject.getWithHash(this.moduleName, id);
+    return this.redisDao.getWithHash(this.moduleName, id);
   }
 
   private deleteCacheWithRedis = (id: number) => {
-    this.cacheClassObject.deleteWithHash(this.moduleName, id);
+    this.redisDao.deleteWithHash(this.moduleName, id);
   }
 }
