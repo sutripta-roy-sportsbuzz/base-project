@@ -16,4 +16,8 @@ export class AppConfig {
   static readonly SQL_AQUIRE = process.env.SQL_AQUIRE;
   static readonly SQL_IDLE = process.env.SQL_IDLE;
   static readonly MONGO_DB_URL = String(process.env.MONGO_DB_URL);
+  static readonly MONGO_DB_NAME = process.env.MONGO_DB_NAME;
+  static readonly REDIS_URL = process.env.REDIS_URL;
+  static readonly REDIS_PORT = Number(process.env.REDIS_PORT);
+  static readonly REDIS_PASSWORD = process.env.REDIS_PASSWORD;
 }

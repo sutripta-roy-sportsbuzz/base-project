@@ -38,6 +38,7 @@
     "mongoose": "^7.6.1",
     "mysql": "^2.18.1",
     "mysql2": "^3.6.1",
+    "redis": "^4.6.10",
     "sequelize": "^6.33.0",
     "sequelize-cli": "^6.6.1",
     "sequelize-fixtures": "^1.2.0",
