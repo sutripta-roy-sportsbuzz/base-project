@@ -8,7 +8,7 @@ export default class BaseRedisDao {
   private expiry: number | Date;
 
   constructor(moduleName: string) {
-    this.connection = RedisConnection.createRedisConnection();
+    this.connection = RedisConnection.getRedisConnection();
     this.moduleName = moduleName.toUpperCase();
     this.expiry = AppConstants.MODULE_WITH_CACHE[this.moduleName as keyof object] ? AppConstants.MODULE_WITH_CACHE[this.moduleName as keyof object]['EXPIRY']: 3600000;
   }
@@ -18,149 +18,149 @@ export default class BaseRedisDao {
   create = async (key: string, value: any, expiry: number | Date = this.expiry) => {
     // set key value
     if (expiry instanceof Date) {
-      return this.connection.set(key, value, 'PXAT', expiry.getTime());
+      return this.connection.SET(key, value, 'PXAT', expiry.getTime());
     }
     else {
-      return this.connection.set(key, value, 'PX', expiry);
+      return this.connection.SET(key, value, 'PX', expiry);
     }
   };
 
   createIfNotExist = (key: string, value: any, expiry: number | Date = this.expiry) => {
     // set key value
     if (expiry instanceof Date) {
-      return this.connection.setnx(key, value, 'PXAT', expiry.getTime());
+      return this.connection.SETNX(key, value, 'PXAT', expiry.getTime());
     }
     else {
-      return this.connection.setnx(key, value, 'PX', expiry);
+      return this.connection.SETNX(key, value, 'PX', expiry);
     }
   }
 
   createWithHash = async (hash: string, key: string, value: any, expiry: number | Date = this.expiry) => {
     // hset key field value
     if (expiry instanceof Date) {
-      return this.connection.hset(hash, key, value, 'PXAT', expiry.getTime());
+      return this.connection.HSET(hash, key, value, 'PXAT', expiry.getTime());
     } else {
-      return this.connection.hset(hash, key, value, 'PX', expiry);
+      return this.connection.HSET(hash, key, value, 'PX', expiry);
     }
   };
 
   createWithHashIfNotExist = (hash: string, key: string, value: any, expiry: number | Date = this.expiry) => {
     // hset key field value
     if (expiry instanceof Date) {
-      return this.connection.hsetnx(hash, key, value, 'PXAT', expiry.getTime());
+      return this.connection.HSETNX(hash, key, value, 'PXAT', expiry.getTime());
     } else {
-      return this.connection.hsetnx(hash, key, value, 'PX', expiry);
+      return this.connection.HSETNX(hash, key, value, 'PX', expiry);
     }
   }
 
   createSetElement = (setName: string, element: string) => {
-    return this.connection.sadd(setName, element);
+    return this.connection.SADD(setName, element);
   }
 
   createSetWithIntersectionOfSets = (...setKeys: string[]) => {
-    return this.connection.sdiffstore(...setKeys);
+    return this.connection.SDIFFSTORE(...setKeys);
   }
 
   createSetWithUnionOfSets = (...setKeys: string[]) => {
-    return this.connection.sunionstore(...setKeys);
+    return this.connection.SUNIONSTORE(...setKeys);
   }
 
   setExpiry = (key: string, timeInSeconds: number) => {
-    return this.connection.expire(key, timeInSeconds);
+    return this.connection.EXPIRE(key, timeInSeconds);
   }
 
   setExpireAt = (key: string, date: Date) => {
-    return this.connection.expire(key, date.getTime());
+    return this.connection.EXPIRE(key, date.getTime());
   }
 
   createListByPushingFirst = (listName: string, ...keys: (string | number)[]) => {
-    return this.connection.lpush(listName, ...keys);
+    return this.connection.LPUSH(listName, ...keys);
   }
 
   createListByPushingLast = (listName: string, ...keys: (string | number)[]) => {
-    return this.connection.rpush(listName, ...keys);
+    return this.connection.RPUSH(listName, ...keys);
   }
 
   setValueAtIndexInList = (listName: string, index: number, value: any) => {
-    return this.connection.lset(listName, index, value);
+    return this.connection.LSET(listName, index, value);
   }
 
   createSortedSet = (sortedSetName: string, ...scoreMembers: (string | Buffer | number)[]) => {
-    return this.connection.zadd(sortedSetName, ...scoreMembers);
+    return this.connection.ZADD(sortedSetName, ...scoreMembers);
   }
 
   // ***********        CHECK        ***********//
 
   checkIfKeyExists = (key: string) => {
-    return this.connection.exists(key);
+    return this.connection.EXISTS(key);
   }
 
   checkWithHashIfExists = (hash: string, key: string) => {
-    return this.connection.hexists(hash, key);
+    return this.connection.HEXISTS(hash, key);
   }
 
   checkIsMemeberExistsInSet = (setName: string, element: string | number) => {
-    return this.connection.sismember(setName, element);
+    return this.connection.SISMEMBER(setName, element);
   }
 
   // ***********        GET        ***********//
 
   get = async (key: string) => {
     // get key
-    return this.connection.get(key);
+    return this.connection.GET(key);
   };
 
   getWithHash = async (hash: string, key: string) => {
     // hget key field
-    return this.connection.hget(hash, key);
+    return this.connection.HGET(hash, key);
   };
 
   getAllKeysByPattern = (pattern: string) => {
-    return this.connection.keys(pattern);
+    return this.connection.KEYS(pattern);
   }
 
   getAllKeysInHash = (hash: string) => {
-    return this.connection.hkeys(hash);
+    return this.connection.HKEYS(hash);
   }
 
   getAllValuesInHash = (hash: string) => {
-    return this.connection.hvals(hash);
+    return this.connection.HVALS(hash);
   }
 
   getAllKeysAndValuesInHash = (hash: string) => {
-    return this.connection.hgetall(hash);
+    return this.connection.HGETALL(hash);
   }
 
   getSetMembers = (setName: string) => {
-    return this.connection.smembers(setName);
+    return this.connection.SMEMBERS(setName);
   }
 
   getLengthOfSet = (setName: string) => {
-    return this.connection.scard(setName);
+    return this.connection.SCARD(setName);
   }
 
   getIntersectionOfSets = (...setKeys: string[]) => {
-    return this.connection.sdiff(...setKeys);
+    return this.connection.SDIFF(...setKeys);
   }
 
   getUnionOfSets = (...setKeys: string[]) => {
-    return this.connection.sunion(...setKeys);
+    return this.connection.SUNION(...setKeys);
   }
 
   getTTL = (key: string) => {
-    return this.connection.ttl(key);
+    return this.connection.TTL(key);
   }
 
   getLengthOfList = (listName: string) => {
-    return this.connection.llen(listName);
+    return this.connection.LLEN(listName);
   }
 
   getListItems = (listName: string, start: number, end: number) => {
-    return this.connection.lrange(listName, start, end);
+    return this.connection.LRANGE(listName, start, end);
   }
 
   getElementAtIndexInList = (listName: string, index: number) => {
-    return this.connection.lindex(listName, index);
+    return this.connection.LINDEX(listName, index);
   }
 
   getPositionOfElementInList = (listName: string, key: any) => {
@@ -168,7 +168,7 @@ export default class BaseRedisDao {
     // Example :-
     // RPUSH mylist a b c 1 2 3 c c c
     // LPOS mylist c ---> 2
-    return this.connection.lpos(listName, key);
+    return this.connection.LPOS(listName, key);
   }
 
   getPositionOfElementInListWithCount = (listName: string, key: any, count: number) => {
@@ -178,7 +178,7 @@ export default class BaseRedisDao {
     // LPOS mylist c COUNT 2 ---> [2, 6]
     // Here returning the index list of first 2 elements matching from the left. Why 2 elements ? because we pass "COUNT 2".
     // Note : "COUNT 0" returns all the matches.
-    return this.connection.lpos(listName, key).count(count);
+    return this.connection.LPOS(listName, key).count(count);
   }
 
   getPositionOfElementInListWithRank = (listName: string, key: any, rank: number) => {
@@ -189,7 +189,7 @@ export default class BaseRedisDao {
     // Here we are getting the index of the key i.e. "c" which have a rank 2 i.e. second element from the left.
     // LPOS mylist c RANK -2 ---> 7
     // Here we are getting the index of the key i.e. "c" which have a rank 2 i.e. second element from the right. minus sign starts counting from end.
-    return this.connection.lpos(listName, key).rank(rank);
+    return this.connection.LPOS(listName, key).rank(rank);
   }
 
   getPositionOfElementInListWithCountAndRank = (listName: string, key: any, count: number, rank: number) => {
@@ -199,24 +199,24 @@ export default class BaseRedisDao {
     // LPOS mylist c RANK -2 COUNT 2 ---> [7,6]
     // Here we are getting 2 elements starts from the second element from the end. 2 elements because of "COUNT 2", starts from the second element from the end because we pass "RANK -2".
     // If we pass "RANK 2 COUNT 2", it will return [6,7]. 2 elements from the starting point of the list.
-    return this.connection.lpos(listName, key).count(count).rank(rank);
+    return this.connection.LPOS(listName, key).count(count).rank(rank);
   }
 
   getSortedSet = (sortedSetName: string, start: number, end: number, withScores: boolean = false) => {
     if (withScores) {
-      // return this.connection.zrange(sortedSetName, start, end).WITHSCORES();
-      return this.connection.zrange(sortedSetName, start, end, 'WITHSCORES');
+      // return this.connection.ZRANGE(sortedSetName, start, end).WITHSCORES();
+      return this.connection.ZRANGE(sortedSetName, start, end, 'WITHSCORES');
     }
-    return this.connection.zrange(sortedSetName, start, end);
+    return this.connection.ZRANGE(sortedSetName, start, end);
   }
 
   getSortedSetReversed = (sortedSetName: string, start: number, end: number) => {
-    // return this.connection.zrange(sortedSetName, start, end).REV();
-    return this.connection.zrange(sortedSetName, start, end, 'REV');
+    // return this.connection.ZRANGE(sortedSetName, start, end).REV();
+    return this.connection.ZRANGE(sortedSetName, start, end, 'REV');
   }
 
   getLengthOfSortedSet = (sortedSetName: string) => {
-    return this.connection.zcard(sortedSetName);
+    return this.connection.ZCARD(sortedSetName);
   }
 
   // ***********        INCREASE        ***********//
@@ -225,23 +225,23 @@ export default class BaseRedisDao {
     // SET mykey "10"
     // INCR mykey
     // GET mykey
-    return this.connection.incr(key);
+    return this.connection.INCR(key);
   };
 
   increaseByInteger = (key: string, num: number) => {
-    return this.connection.incrby(key, num);
+    return this.connection.INCRBY(key, num);
   }
 
   increaseByFloat = (key: string, num: number) => {
-    return this.connection.incrbyfloat(key, num);
+    return this.connection.INCRBYFLOAT(key, num);
   }
 
   increaseWithHashByInteger = (hash: string, key: string, value: any) => {
-    return this.connection.hincrby(hash, key, value);
+    return this.connection.HINCRBY(hash, key, value);
   }
 
   increaseWithHashByFloat = (hash: string, key: string, value: any) => {
-    return this.connection.hincrbyfloat(hash, key, value);
+    return this.connection.HINCRBYFLOAT(hash, key, value);
   }
 
   // ***********        DELETE        ***********//
@@ -249,67 +249,36 @@ export default class BaseRedisDao {
   delete = async (key: string) => {
     // HSETNX myhash field "Hello"
     // HGET myhash field
-    return this.connection.del(key);
+    return this.connection.DEL(key);
   };
 
   deleteWithHash = async (hash: string, key: string) => {
     // HSETNX myhash field "Hello"
     // HGET myhash field
-    return this.connection.hdel(hash, key);
+    return this.connection.HDEL(hash, key);
   };
 
   deleteSetElement = (setName: string, element: string) => {
-    return this.connection.srem(setName, element);
+    return this.connection.SREM(setName, element);
   }
 
   deletingListElementsFromFirst = (listName: string, num?: number) => {
     if (num) {
-      return this.connection.lpop(listName, num);
+      return this.connection.LPOP(listName, num);
     }
-    return this.connection.lpop(listName);
+    return this.connection.LPOP(listName);
   }
 
   deletingListElementsFromLast = (listName: string, num?: number) => {
     if (num) {
-      return this.connection.rpop(listName, num);
+      return this.connection.RPOP(listName, num);
     }
-    return this.connection.rpop(listName);
+    return this.connection.RPOP(listName);
   }
 
   trimList = (listName: string, start: number, end: number) => {
-    return this.connection.ltrim(listName, start, end);
+    return this.connection.LTRIM(listName, start, end);
   }
-
-//   /**
-//    * get array of sorted elements by scores
-//    * @param {string} sortedSetKey sorted set name  
-//    * @param {number} start starting score
-//    * @param {number} end ending score
-//    * @returns {string[]} array of sorted elements
-//    */
-//   getByScoresSortedSet = (sortedSetKey: string, start: number, end: number) => {
-//     return this.redisClient.zrange(sortedSetKey, start, end, 'BYSCORE');
-//   }
-
-//   /**
-//    * get array of sorted elements by scores but also including scores
-//    * @param {string} sortedSetKey sorted set name  
-//    * @param {number} start starting score
-//    * @param {number} end ending score
-//    * @returns {string[]} array of sorted elements by scores [element, score]
-//    */
-//   getByScoresWithScoresSortedSet = (sortedSetKey: string, start: number, end: number) => {
-//     return this.redisClient.zrange(sortedSetKey, start, end, 'BYSCORE', 'WITHSCORES');
-//   }
-
-//   /**
-//    * get length of sorted set
-//    * @param {string} sortedSetKey sorted set name   
-//    * @returns {number} length of sorted set
-//    */
-//   lengthOfSortedSet = (sortedSetKey: string) => {
-//     return this.redisClient.zcard(sortedSetKey);
-//   }
 }
 
 

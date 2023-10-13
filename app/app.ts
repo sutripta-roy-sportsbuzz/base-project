@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 // import Course from './course';
 import AppRoutes from './src/app.routes';
 import { HandleHTTPErrors, HandleGeneralErrors } from './middlewares/error.middleware';
-import MongoDBConnection from './connections/mongoDbConnection';
+import ConnectionsInitiator from './connections';
 
 const app = express();
 dotenv.config();
@@ -14,7 +14,14 @@ dotenv.config();
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
-MongoDBConnection.createMongoDBConnection()
+
+ConnectionsInitiator.initConnections().then(() => {
+  app.use('/api', new AppRoutes().router)
+  app.use(HandleHTTPErrors);
+  app.use(HandleGeneralErrors);
+});
+
+export default app;
 
 // const apiRouting = router.post('/registration', (req, res) => {
 //   const { username, password } = req.body;
@@ -59,8 +66,4 @@ MongoDBConnection.createMongoDBConnection()
 // })
 
 // app.use(apiRouting)
-app.use('/api', new AppRoutes().router)
-app.use(HandleHTTPErrors);
-app.use(HandleGeneralErrors);
 
-export default app;

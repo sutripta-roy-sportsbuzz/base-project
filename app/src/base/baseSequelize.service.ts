@@ -8,14 +8,16 @@ export default class BaseSequelizeService<AttributesInputT, AttributesOutputT> {
   public moduleName: any;
   public cacheEnabled: boolean = false;
   public redisDao: any;
+  public redisStoreSchema: any;
 
-  constructor(SequelizeDao: any, moduleName: string, RedisDao: any | null = null) {
+  constructor(SequelizeDao: any, moduleName: string, RedisDao: any | null = null, redisStoreSchema: any) {
     this.sequelizeDao = new SequelizeDao();
     this.moduleName = moduleName;
     this.cacheEnabled = AppConstants.MODULE_WITH_CACHE[this.moduleName.toUpperCase() as keyof object] ? true : false;
 
     if (this.cacheEnabled) {
       this.redisDao = new RedisDao()
+      this.redisStoreSchema = redisStoreSchema;
     }
   }
 
@@ -49,7 +51,6 @@ export default class BaseSequelizeService<AttributesInputT, AttributesOutputT> {
 
     const updatedResult = await this.sequelizeDao.updateById(id, payload);
     if (this.cacheEnabled) {
-      this.deleteCacheWithRedis(id)
       this.createCacheWithRedis(updatedResult)
     }
     return updatedResult;
@@ -66,14 +67,15 @@ export default class BaseSequelizeService<AttributesInputT, AttributesOutputT> {
   };
 
   private createCacheWithRedis = (result: any) => {
-    this.redisDao.createWithHash(this.moduleName, result.id, JSON.stringify(result));
+    result = this.redisStoreSchema.parse(result);
+    this.redisDao.createWithHash(this.moduleName, `id-${result.id.toString()}`, JSON.stringify(result));
   }
 
   private getCacheWithRedis = (id: number) => {
-    return this.redisDao.getWithHash(this.moduleName, id);
+    return this.redisDao.getWithHash(this.moduleName, `id-${id.toString()}`);
   }
 
   private deleteCacheWithRedis = (id: number) => {
-    this.redisDao.deleteWithHash(this.moduleName, id);
+    this.redisDao.deleteWithHash(this.moduleName, `id-${id.toString()}`);
   }
 }
