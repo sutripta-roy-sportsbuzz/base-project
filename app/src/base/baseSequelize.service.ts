@@ -1,7 +1,7 @@
 import { HttpException } from '../../libraries/HttpException';
 import { HTTPStatus } from '../../enums/common';
 import { Responses } from '../../enums/responses';
-import { AppConstants } from 'configs/constants';
+import { AppConstants } from '../../configs/constants';
 
 export default class BaseSequelizeService<AttributesInputT, AttributesOutputT> {
   public sequelizeDao: any;
