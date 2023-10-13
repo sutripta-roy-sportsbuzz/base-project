@@ -8,6 +8,7 @@ export default class RedisConnection {
   static createRedisConnection() {
     if(!this.INSTANCE) {
       this.INSTANCE = createClient({
+        // username: default ---> as we are using "default" as username, it works; if we don't pass.
         password: AppConfig.REDIS_PASSWORD,
         socket: {
             host: AppConfig.REDIS_URL,
