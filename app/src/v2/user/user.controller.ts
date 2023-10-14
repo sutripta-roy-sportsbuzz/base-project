@@ -1,9 +1,7 @@
 import { Response, Request, NextFunction } from 'express';
 
 export default class UserController {
-  constructor() {
-
-  }
+  constructor() {}
 
   public getById = async (req: Request, res: Response, next: NextFunction) => {
     try {

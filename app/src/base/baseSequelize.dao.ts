@@ -29,7 +29,7 @@ export default class BaseSequelizeDao<InputT, OutputT> {
     const orderArr: Array<Array<string>> = [];
     let where: object = {};
     if (Object.keys(filter).length > 0) {
-      where = filter
+      where = filter;
     }
     if (sort && sort.field && sort.order) {
       orderArr.push([sort.field, sort.order]);
@@ -48,11 +48,17 @@ export default class BaseSequelizeDao<InputT, OutputT> {
     });
   };
 
-  public getAllWithLimitOffset = async (attributes: object = [], filter: object = {}, offset = 0, limit = 10, sort: { field: string; order: string } | null = null): Promise<any> => {
+  public getAllWithLimitOffset = async (
+    attributes: object = [],
+    filter: object = {},
+    offset = 0,
+    limit = 10,
+    sort: { field: string; order: string } | null = null,
+  ): Promise<any> => {
     const orderArr: Array<Array<string>> = [];
     let where: object = {};
     if (Object.keys(filter).length > 0) {
-      where = filter
+      where = filter;
     }
     if (sort && sort.field && sort.order) {
       orderArr.push([sort.field, sort.order]);
@@ -81,7 +87,7 @@ export default class BaseSequelizeDao<InputT, OutputT> {
       where: { id },
       transaction: t,
       returning: true,
-      plain: true
+      plain: true,
     });
     return this.getById(id);
   };

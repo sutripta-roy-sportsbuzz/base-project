@@ -1,9 +1,11 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 
-import { sequelize } from '../../connections/sequelize/db_config';
+import ConnectionsInitiator from '../../connections';
 import { BaseModelAttributes } from '../../interfaces/baseAttributes';
 import { AppConstants } from '../../configs/constants';
 import { UserStatus } from '../../enums/common';
+
+const { sequelize } = ConnectionsInitiator.initSequelize();
 
 export interface UserAttributes extends BaseModelAttributes {
   username: string;

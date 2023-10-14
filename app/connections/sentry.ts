@@ -13,7 +13,7 @@ export default class SentryConnection {
 
   static createSentryConnection() {
     if (!this.INSTANCE) {
-      this.INSTANCE = new SentryConnection()
+      this.INSTANCE = new SentryConnection();
     }
     return Sentry;
   }

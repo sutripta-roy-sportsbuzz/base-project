@@ -7,12 +7,12 @@ export default class LoginLogsRouterV1 extends BaseRouter {
     super(LoginLogsController, {
       post: {
         validationSchema: createSchema,
-        validationKey: 'body'
+        validationKey: 'body',
       },
       get: {
         validationSchema: identitySchema,
-        validationKey: 'params'
-      }
-    })
+        validationKey: 'params',
+      },
+    });
   }
 }

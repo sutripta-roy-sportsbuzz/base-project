@@ -7,7 +7,7 @@ import { userDetailsResponseSchema } from './user.dto';
 
 export default class UserController extends BaseController {
   constructor() {
-    super(UserService, userDetailsResponseSchema, 'User')
+    super(UserService, userDetailsResponseSchema, 'User');
   }
 
   public login = async (req: Request, res: Response, next: NextFunction) => {

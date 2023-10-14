@@ -3,25 +3,32 @@ import dotenv from 'dotenv';
 // import crypto from 'crypto';
 
 // import Course from './course';
+import ConnectionsInitiator from './connections';
 import AppRoutes from './src/app.routes';
 import { HandleHTTPErrors, HandleGeneralErrors } from './middlewares/error.middleware';
-import ConnectionsInitiator from './connections';
+import SequelizeAssociationsMaker from './connections/sequelize/associations';
 
-const app = express();
-dotenv.config();
+export default class App {
+  static async init() {
+    const app = express();
+    dotenv.config();
 
-// const router = express.Router();
+    // const router = express.Router();
 
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
+    app.use(express.urlencoded({ extended: true }));
+    app.use(express.json());
 
-ConnectionsInitiator.initConnections().then(() => {
-  app.use('/api', new AppRoutes().router)
-  app.use(HandleHTTPErrors);
-  app.use(HandleGeneralErrors);
-});
+    await ConnectionsInitiator.initConnections();
+    SequelizeAssociationsMaker.init();
 
-export default app;
+    app.use('/api', new AppRoutes().router);
+
+    app.use(HandleHTTPErrors);
+    app.use(HandleGeneralErrors);
+
+    return app;
+  }
+}
 
 // const apiRouting = router.post('/registration', (req, res) => {
 //   const { username, password } = req.body;
@@ -38,7 +45,7 @@ export default app;
 //   // console.log("==========   Cipher   ==========")
 //   // const key = crypto.randomBytes(32);
 //   // const iv = crypto.randomBytes(16);
-  
+
 //   // const cipher = crypto.createCipheriv('aes256', key, iv);
 //   // const encryptedMessage = cipher.update(hmacPassword, 'utf8', 'hex') + cipher.final('hex');
 
@@ -51,7 +58,6 @@ export default app;
 //   // console.log('decipher > ', decipher)
 //   // console.log('decryptedMessage > ', decryptedMessage)
 
-  
 //   console.log('=====   Singleton   =====')
 //   const courseObj = Course.createInstance('bTech', '4 years');
 //   const courseObj1 = Course.createInstance('BCA', '3 years');
@@ -66,4 +72,3 @@ export default app;
 // })
 
 // app.use(apiRouting)
-

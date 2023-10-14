@@ -10,7 +10,9 @@ export default class BaseRedisDao {
   constructor(moduleName: string) {
     this.connection = RedisConnection.getRedisConnection();
     this.moduleName = moduleName.toUpperCase();
-    this.expiry = AppConstants.MODULE_WITH_CACHE[this.moduleName as keyof object] ? AppConstants.MODULE_WITH_CACHE[this.moduleName as keyof object]['EXPIRY']: 3600000;
+    this.expiry = AppConstants.MODULE_WITH_CACHE[this.moduleName as keyof object]
+      ? AppConstants.MODULE_WITH_CACHE[this.moduleName as keyof object]['EXPIRY']
+      : 3600000;
   }
 
   // ***********        CREATE        ***********//
@@ -19,8 +21,7 @@ export default class BaseRedisDao {
     // set key value
     if (expiry instanceof Date) {
       return this.connection.SET(key, value, 'PXAT', expiry.getTime());
-    }
-    else {
+    } else {
       return this.connection.SET(key, value, 'PX', expiry);
     }
   };
@@ -29,11 +30,10 @@ export default class BaseRedisDao {
     // set key value
     if (expiry instanceof Date) {
       return this.connection.SETNX(key, value, 'PXAT', expiry.getTime());
-    }
-    else {
+    } else {
       return this.connection.SETNX(key, value, 'PX', expiry);
     }
-  }
+  };
 
   createWithHash = async (hash: string, key: string, value: any, expiry: number | Date = this.expiry) => {
     // hset key field value
@@ -51,57 +51,57 @@ export default class BaseRedisDao {
     } else {
       return this.connection.HSETNX(hash, key, value, 'PX', expiry);
     }
-  }
+  };
 
   createSetElement = (setName: string, element: string) => {
     return this.connection.SADD(setName, element);
-  }
+  };
 
   createSetWithIntersectionOfSets = (...setKeys: string[]) => {
     return this.connection.SDIFFSTORE(...setKeys);
-  }
+  };
 
   createSetWithUnionOfSets = (...setKeys: string[]) => {
     return this.connection.SUNIONSTORE(...setKeys);
-  }
+  };
 
   setExpiry = (key: string, timeInSeconds: number) => {
     return this.connection.EXPIRE(key, timeInSeconds);
-  }
+  };
 
   setExpireAt = (key: string, date: Date) => {
     return this.connection.EXPIRE(key, date.getTime());
-  }
+  };
 
   createListByPushingFirst = (listName: string, ...keys: (string | number)[]) => {
     return this.connection.LPUSH(listName, ...keys);
-  }
+  };
 
   createListByPushingLast = (listName: string, ...keys: (string | number)[]) => {
     return this.connection.RPUSH(listName, ...keys);
-  }
+  };
 
   setValueAtIndexInList = (listName: string, index: number, value: any) => {
     return this.connection.LSET(listName, index, value);
-  }
+  };
 
   createSortedSet = (sortedSetName: string, ...scoreMembers: (string | Buffer | number)[]) => {
     return this.connection.ZADD(sortedSetName, ...scoreMembers);
-  }
+  };
 
   // ***********        CHECK        ***********//
 
   checkIfKeyExists = (key: string) => {
     return this.connection.EXISTS(key);
-  }
+  };
 
   checkWithHashIfExists = (hash: string, key: string) => {
     return this.connection.HEXISTS(hash, key);
-  }
+  };
 
   checkIsMemeberExistsInSet = (setName: string, element: string | number) => {
     return this.connection.SISMEMBER(setName, element);
-  }
+  };
 
   // ***********        GET        ***********//
 
@@ -117,51 +117,51 @@ export default class BaseRedisDao {
 
   getAllKeysByPattern = (pattern: string) => {
     return this.connection.KEYS(pattern);
-  }
+  };
 
   getAllKeysInHash = (hash: string) => {
     return this.connection.HKEYS(hash);
-  }
+  };
 
   getAllValuesInHash = (hash: string) => {
     return this.connection.HVALS(hash);
-  }
+  };
 
   getAllKeysAndValuesInHash = (hash: string) => {
     return this.connection.HGETALL(hash);
-  }
+  };
 
   getSetMembers = (setName: string) => {
     return this.connection.SMEMBERS(setName);
-  }
+  };
 
   getLengthOfSet = (setName: string) => {
     return this.connection.SCARD(setName);
-  }
+  };
 
   getIntersectionOfSets = (...setKeys: string[]) => {
     return this.connection.SDIFF(...setKeys);
-  }
+  };
 
   getUnionOfSets = (...setKeys: string[]) => {
     return this.connection.SUNION(...setKeys);
-  }
+  };
 
   getTTL = (key: string) => {
     return this.connection.TTL(key);
-  }
+  };
 
   getLengthOfList = (listName: string) => {
     return this.connection.LLEN(listName);
-  }
+  };
 
   getListItems = (listName: string, start: number, end: number) => {
     return this.connection.LRANGE(listName, start, end);
-  }
+  };
 
   getElementAtIndexInList = (listName: string, index: number) => {
     return this.connection.LINDEX(listName, index);
-  }
+  };
 
   getPositionOfElementInList = (listName: string, key: any) => {
     // returns the index in the list matching the key
@@ -169,7 +169,7 @@ export default class BaseRedisDao {
     // RPUSH mylist a b c 1 2 3 c c c
     // LPOS mylist c ---> 2
     return this.connection.LPOS(listName, key);
-  }
+  };
 
   getPositionOfElementInListWithCount = (listName: string, key: any, count: number) => {
     // it will return multiple keys as per the count if found
@@ -179,18 +179,18 @@ export default class BaseRedisDao {
     // Here returning the index list of first 2 elements matching from the left. Why 2 elements ? because we pass "COUNT 2".
     // Note : "COUNT 0" returns all the matches.
     return this.connection.LPOS(listName, key).count(count);
-  }
+  };
 
   getPositionOfElementInListWithRank = (listName: string, key: any, rank: number) => {
     // rank returns the index of nth positioned element matching the key
     // Example :-
     // RPUSH mylist a b c 1 2 3 c c c
-    // LPOS mylist c RANK 2 ---> 6 
+    // LPOS mylist c RANK 2 ---> 6
     // Here we are getting the index of the key i.e. "c" which have a rank 2 i.e. second element from the left.
     // LPOS mylist c RANK -2 ---> 7
     // Here we are getting the index of the key i.e. "c" which have a rank 2 i.e. second element from the right. minus sign starts counting from end.
     return this.connection.LPOS(listName, key).rank(rank);
-  }
+  };
 
   getPositionOfElementInListWithCountAndRank = (listName: string, key: any, count: number, rank: number) => {
     // rank returns all the indexes starting from nth positioned element matching the key
@@ -200,7 +200,7 @@ export default class BaseRedisDao {
     // Here we are getting 2 elements starts from the second element from the end. 2 elements because of "COUNT 2", starts from the second element from the end because we pass "RANK -2".
     // If we pass "RANK 2 COUNT 2", it will return [6,7]. 2 elements from the starting point of the list.
     return this.connection.LPOS(listName, key).count(count).rank(rank);
-  }
+  };
 
   getSortedSet = (sortedSetName: string, start: number, end: number, withScores: boolean = false) => {
     if (withScores) {
@@ -208,16 +208,16 @@ export default class BaseRedisDao {
       return this.connection.ZRANGE(sortedSetName, start, end, 'WITHSCORES');
     }
     return this.connection.ZRANGE(sortedSetName, start, end);
-  }
+  };
 
   getSortedSetReversed = (sortedSetName: string, start: number, end: number) => {
     // return this.connection.ZRANGE(sortedSetName, start, end).REV();
     return this.connection.ZRANGE(sortedSetName, start, end, 'REV');
-  }
+  };
 
   getLengthOfSortedSet = (sortedSetName: string) => {
     return this.connection.ZCARD(sortedSetName);
-  }
+  };
 
   // ***********        INCREASE        ***********//
 
@@ -230,19 +230,19 @@ export default class BaseRedisDao {
 
   increaseByInteger = (key: string, num: number) => {
     return this.connection.INCRBY(key, num);
-  }
+  };
 
   increaseByFloat = (key: string, num: number) => {
     return this.connection.INCRBYFLOAT(key, num);
-  }
+  };
 
   increaseWithHashByInteger = (hash: string, key: string, value: any) => {
     return this.connection.HINCRBY(hash, key, value);
-  }
+  };
 
   increaseWithHashByFloat = (hash: string, key: string, value: any) => {
     return this.connection.HINCRBYFLOAT(hash, key, value);
-  }
+  };
 
   // ***********        DELETE        ***********//
 
@@ -260,32 +260,26 @@ export default class BaseRedisDao {
 
   deleteSetElement = (setName: string, element: string) => {
     return this.connection.SREM(setName, element);
-  }
+  };
 
   deletingListElementsFromFirst = (listName: string, num?: number) => {
     if (num) {
       return this.connection.LPOP(listName, num);
     }
     return this.connection.LPOP(listName);
-  }
+  };
 
   deletingListElementsFromLast = (listName: string, num?: number) => {
     if (num) {
       return this.connection.RPOP(listName, num);
     }
     return this.connection.RPOP(listName);
-  }
+  };
 
   trimList = (listName: string, start: number, end: number) => {
     return this.connection.LTRIM(listName, start, end);
-  }
+  };
 }
-
-
-
-
-
-
 
 // import { Redis as RedisClient } from '@/connections/redis/redis';
 
@@ -303,7 +297,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * create a Redis string
-//    * @param {string} key key name  
+//    * @param {string} key key name
 //    * @param {value} value value of the key
 //    * @param {number | Date} expiry number value in miliseconds or Date object
 //    * @returns {string} OK
@@ -322,7 +316,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * create a Redis string, but dont create if it already exist
-//    * @param {string} key key name  
+//    * @param {string} key key name
 //    * @param {value} value value of the key
 //    * @param {number | Date} expiry number value in miliseconds or Date object
 //    * @returns {string} OK
@@ -341,7 +335,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * for creating multiple key values, pass object
-//    * @param {object} obj 
+//    * @param {object} obj
 //    * @returns {string} OK
 //    */
 //   createMultipleString = (obj: object) => {
@@ -350,7 +344,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * for incrementing number value by num
-//    * @param {string} key 
+//    * @param {string} key
 //    * @param {number} num number to be incremented
 //    * @returns {number} final value
 //    */
@@ -360,7 +354,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * check whether string exist or not
-//    * @param key 
+//    * @param key
 //    * @returns {number} 0 if not exist, 1 if exist
 //    */
 //   checkStringExist = (key: string) => {
@@ -391,8 +385,8 @@ export default class BaseRedisDao {
 
 //   /**
 //    * for creating and updating hash object
-//    * @param {string} objectKey hash name 
-//    * @param {object} value 
+//    * @param {string} objectKey hash name
+//    * @param {object} value
 //    * @returns {number} number of keys created
 //    */
 //   createHash = (objectKey: string, value: object) => {
@@ -413,39 +407,39 @@ export default class BaseRedisDao {
 
 //   /**
 //    * for creating key if it does not exist
-//    * @param {string} objectKey hash name 
+//    * @param {string} objectKey hash name
 //    * @param {string} key key to be set
-//    * @param {string | number} value 
+//    * @param {string | number} value
 //    * @returns {number} 0/1, 1 if key has been created
 //    */
 //   createHashKeyIfNotExist = (objectKey: string, key: string, value: number) => {
 //     return this.redisClient.hsetnx(objectKey, key, value);
 //   }
-  
+
 //   /**
-//    * 
-//    * @param {string} objectKey hash name  
-//    * @param {string[]} keys 
+//    *
+//    * @param {string} objectKey hash name
+//    * @param {string[]} keys
 //    * @returns {number} number of keys deleted
 //    */
 //   deleteHashKeys = (objectKey: string, ...keys: string[]) => {
 //     return this.redisClient.hdel(objectKey, ...keys)
 //   }
-  
+
 //   /**
-//    * 
-//    * @param {string} objectKey hash name   
-//    * @param {string} key 
+//    *
+//    * @param {string} objectKey hash name
+//    * @param {string} key
 //    * @returns {number} 0/1, 1 means key exists
 //    */
 //   checkHashKeyExist = (objectKey: string, key: string) => {
 //     return this.redisClient.hexists(objectKey, key);
 //   }
-  
+
 //   /**
 //    * get a single key's data
-//    * @param {string} objectKey hash name   
-//    * @param {string} key key name 
+//    * @param {string} objectKey hash name
+//    * @param {string} key key name
 //    * @returns {string | null}
 //    */
 //   getHashKeyValue = (objectKey: string, key: string) => {
@@ -454,8 +448,8 @@ export default class BaseRedisDao {
 
 //   /**
 //    * get all data of a hash
-//    * @param {string} objectKey hash name   
-//    * @returns 
+//    * @param {string} objectKey hash name
+//    * @returns
 //    */
 //   getAllHash = (objectKey: string) => {
 //     return this.redisClient.hgetall(objectKey);
@@ -463,7 +457,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * get keys of a hash
-//    * @param {string} objectKey hash name   
+//    * @param {string} objectKey hash name
 //    * @returns {string[]} array of keys
 //    */
 //   getAllKeysHash = (objectKey: string) => {
@@ -472,7 +466,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * get values of a hash
-//    * @param {string} objectKey hash name   
+//    * @param {string} objectKey hash name
 //    * @returns {string[]} array of values
 //    */
 //   getAllValuesHash = (objectKey: string) => {
@@ -486,7 +480,7 @@ export default class BaseRedisDao {
 //   /**
 //    * creating/updating a set
 //    * @param {string} setKey set name
-//    * @param {(string | number)[]} members members data 
+//    * @param {(string | number)[]} members members data
 //    * @returns {number} numbers of members created
 //    */
 //   createSet = (setKey: string, ...members: string[]) => {
@@ -495,7 +489,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * for deleting members form a set
-//    * @param {string} setKey set name 
+//    * @param {string} setKey set name
 //    * @param {(string | number)[]} members members to be deleted
 //    * @returns {number} number of members deleted
 //    */
@@ -505,7 +499,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * for fetching length of the set
-//    * @param {string} setKey set name 
+//    * @param {string} setKey set name
 //    */
 //   lengthOfSet = (setKey: string) => {
 //     this.redisClient.scard(setKey);
@@ -513,8 +507,8 @@ export default class BaseRedisDao {
 
 //   /**
 //    * for getting intersection of sets
-//    * @param {string[]} setKeys sets name 
-//    * @returns 
+//    * @param {string[]} setKeys sets name
+//    * @returns
 //    */
 //   intersectionSet = (...setKeys: string[]) => {
 //     return this.redisClient.sdiff(...setKeys);
@@ -522,8 +516,8 @@ export default class BaseRedisDao {
 
 //   /**
 //    * for getting union of sets
-//    * @param {string[]} setKeys sets name 
-//    * @returns 
+//    * @param {string[]} setKeys sets name
+//    * @returns
 //    */
 //   unionSet = (...setKeys: string[]) => {
 //     return this.redisClient.sunion(...setKeys);
@@ -531,7 +525,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * check member exist in the set or not
-//    * @param {string} setKey set name  
+//    * @param {string} setKey set name
 //    * @param {string | number} key check member exist
 //    * @returns {number} 0/1, 1 if member exist
 //    */
@@ -541,7 +535,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * fetching list of members of a set
-//    * @param {string} setKey set name  
+//    * @param {string} setKey set name
 //    * @returns {string[]} list of members
 //    */
 //   getAllSet = (setKey: string) => {
@@ -555,7 +549,7 @@ export default class BaseRedisDao {
 //   /**
 //    * creating/update a list, left push
 //    * @param {string} listKey list name
-//    * @param {(string | number)[]} keys 
+//    * @param {(string | number)[]} keys
 //    * @returns {number} length of the list
 //    */
 //   createList = (listKey: string, ...keys: (string | number)[]) => {
@@ -564,8 +558,8 @@ export default class BaseRedisDao {
 
 //   /**
 //    * creating/update a list, right push
-//    * @param {string} listKey list name 
-//    * @param {(string | number)[]} keys  
+//    * @param {string} listKey list name
+//    * @param {(string | number)[]} keys
 //    * @returns {number} length of the list
 //    */
 //   rightPushList = (listKey: string, ...keys: (string | number)[]) => {
@@ -574,7 +568,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * pop data from the left side, list
-//    * @param {string} listKey list name listKey 
+//    * @param {string} listKey list name listKey
 //    * @param {number} num optional, number of data to be poped
 //    * @returns {string[]} array of poped data
 //    */
@@ -584,7 +578,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * pop data from the right side, list
-//    * @param {string} listKey list name listKey 
+//    * @param {string} listKey list name listKey
 //    * @param {number} num optional, number of data to be poped
 //    * @returns {string[]} array of poped data
 //    */
@@ -594,7 +588,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * set a value to a specific index
-//    * @param {string} listKey list name listKey  
+//    * @param {string} listKey list name listKey
 //    * @param {number} index index to be updated
 //    * @param {string | number} value new value
 //    * @returns {string} OK
@@ -605,7 +599,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * trim list to a specific index range
-//    * @param {string} listKey list name listKey   
+//    * @param {string} listKey list name listKey
 //    * @param {number} start start index
 //    * @param {number} end end index
 //    * @returns {stirng} OK
@@ -618,7 +612,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * length of the list
-//    * @param {string} listKey list name listKey    
+//    * @param {string} listKey list name listKey
 //    * @returns {number} length of the list
 //    */
 //   lengthOfList = (listKey: string) => {
@@ -627,7 +621,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * get data of a specific index range
-//    * @param {string} listKey list name listKey   
+//    * @param {string} listKey list name listKey
 //    * @param {number} start start index
 //    * @param {number} end end index
 //    * @returns {string[]} array of list nodes
@@ -640,7 +634,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * left index element
-//    * @param {string} listKey list name listKey    
+//    * @param {string} listKey list name listKey
 //    * @param {number} index left index
 //    * @returns {string | null}
 //    */
@@ -650,7 +644,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * position of element form left hand side
-//    * @param {string} listKey list name listKey    
+//    * @param {string} listKey list name listKey
 //    * @param {string | number} key left index
 //    * @returns {string | null} element index, if there are multiple then it will return first one from left hand side
 //    */
@@ -674,7 +668,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * get array of sorted elements
-//    * @param {string} sortedSetKey sorted set name 
+//    * @param {string} sortedSetKey sorted set name
 //    * @param {number} start optional, starting index
 //    * @param {number} end optional, ending index
 //    * @returns {string[]} array of sorted(sort by score) elements
@@ -687,7 +681,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * get array of sorted elements in reverse order
-//    * @param {string} sortedSetKey sorted set name 
+//    * @param {string} sortedSetKey sorted set name
 //    * @param {number} start optional, starting index
 //    * @param {number} end optional, ending index
 //    * @returns {string[]} array of sorted(sort by score) elements in reverse order
@@ -700,7 +694,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * get array of sorted elements with scores
-//    * @param {string} sortedSetKey sorted set name 
+//    * @param {string} sortedSetKey sorted set name
 //    * @param {number} start optional, starting index
 //    * @param {number} end optional, ending index
 //    * @returns {string[]} array of sorted(sort by score) elements with scores [element, score]
@@ -713,7 +707,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * get array of sorted elements by scores
-//    * @param {string} sortedSetKey sorted set name  
+//    * @param {string} sortedSetKey sorted set name
 //    * @param {number} start starting score
 //    * @param {number} end ending score
 //    * @returns {string[]} array of sorted elements
@@ -724,7 +718,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * get array of sorted elements by scores but also including scores
-//    * @param {string} sortedSetKey sorted set name  
+//    * @param {string} sortedSetKey sorted set name
 //    * @param {number} start starting score
 //    * @param {number} end ending score
 //    * @returns {string[]} array of sorted elements by scores [element, score]
@@ -735,7 +729,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * get length of sorted set
-//    * @param {string} sortedSetKey sorted set name   
+//    * @param {string} sortedSetKey sorted set name
 //    * @returns {number} length of sorted set
 //    */
 //   lengthOfSortedSet = (sortedSetKey: string) => {
@@ -748,8 +742,8 @@ export default class BaseRedisDao {
 //   /**
 //    * For sending RAW COMMAND
 //    * @param {string} command command name
-//    * @param args 
-//    * @returns 
+//    * @param args
+//    * @returns
 //    */
 
 //   rawCommand = (command: string, ...args: string[]) => {
@@ -767,8 +761,8 @@ export default class BaseRedisDao {
 
 //   /**
 //    * for setting expiry
-//    * @param {string} key 
-//    * @param {number} timeInSeconds 
+//    * @param {string} key
+//    * @param {number} timeInSeconds
 //    * @returns {boolean} 0/1, 1 means expiry applied
 //    */
 //   setExpiryString = (key: string, timeInSeconds: number) => {
@@ -777,8 +771,8 @@ export default class BaseRedisDao {
 
 //   /**
 //    * expire key at specific date
-//    * @param {string} key 
-//    * @param {Date} date 
+//    * @param {string} key
+//    * @param {Date} date
 //    * @returns {boolean} 0/1, 1 means expiry applied
 //    */
 //   setExpireAtString = (key: string, date: Date) => {
@@ -787,7 +781,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * for removing expiry
-//    * @param {string} key 
+//    * @param {string} key
 //    * @returns {boolean} 0/1, 1 means expiry removed
 //    */
 //   removeExpiryString = (key: string) => {
@@ -796,7 +790,7 @@ export default class BaseRedisDao {
 
 //   /**
 //    * TTL, return time to live
-//    * @param {string} key 
+//    * @param {string} key
 //    * @returns {number}  -2 if the key does not exist. -1 if the key exists but has no associated expire.
 //    */
 //   getTTL = (key: string) => {

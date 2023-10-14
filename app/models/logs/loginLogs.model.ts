@@ -18,7 +18,7 @@ const LoginLogsSchema = new Schema<LoginLogsAttributes>(
   {
     userId: {
       type: Number,
-      required: true
+      required: true,
     },
     loginDeviceId: {
       type: String,
@@ -30,15 +30,15 @@ const LoginLogsSchema = new Schema<LoginLogsAttributes>(
     },
     loginMethod: {
       type: String,
-      required: true
+      required: true,
     },
     status: {
       type: String,
       enum: LoginStatus,
-      default: LoginStatus.SUCCESSFUL
-    }
+      default: LoginStatus.SUCCESSFUL,
+    },
   },
-  { timestamps: { createdAt: 'createdAt' } }
+  { timestamps: { createdAt: 'createdAt' } },
 );
 
 const LoginLogsModel = mongoose.model('loginLogs', LoginLogsSchema);

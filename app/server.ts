@@ -1,7 +1,11 @@
-import app from './app';
+import App from './app';
 
-app.listen(5001, () => {
-  console.log('Server Started')
-}).on('error', (err) => {
-  console.log('Server Can\'t be Started > ', err)
+App.init().then((app) => {
+  app
+    .listen(5001, () => {
+      console.log('Server Started');
+    })
+    .on('error', (err) => {
+      console.log("Server Can't be Started > ", err);
+    });
 });

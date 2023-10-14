@@ -7,7 +7,7 @@ import { Responses } from '../../../enums/responses';
 
 export default class LoginLogsService extends BaseMongoService<LoginLogsModelInput, LoginLogsModelOutput> {
   constructor() {
-    super(LoginLogsDao)
+    super(LoginLogsDao);
   }
 
   public getById = async (id: number): Promise<LoginLogsModelOutput> => {

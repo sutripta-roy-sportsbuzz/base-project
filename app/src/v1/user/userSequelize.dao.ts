@@ -4,6 +4,6 @@ import UserModel, { UserModelInput, UserModelOutput } from '../../../models/user
 
 export default class UserSequelizeDao extends BaseSequelizeDao<UserModelInput, UserModelOutput> {
   constructor() {
-    super(UserModel)
+    super(UserModel);
   }
 }

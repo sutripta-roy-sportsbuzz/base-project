@@ -12,7 +12,7 @@ export enum HTTPStatus {
   INTERNAL_SERVER_ERROR = 500,
   UNPROCESSABLE_ENTITY = 422,
   RESOURCE_EXIST = 409,
-  TOO_MANY_REQUEST = 429
+  TOO_MANY_REQUEST = 429,
 }
 
 export enum UserStatus {

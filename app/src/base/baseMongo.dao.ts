@@ -21,7 +21,7 @@ export default class BaseMongoDao<InputT, OutputT> {
   };
 
   public findWithSelectedFields = async (filter: any, output: any, sorting = {}, skip = 0, limit = 0) => {
-    let result
+    let result;
     if (limit) {
       result = await this.model.find(filter, output).sort(sorting).skip(Number(skip)).limit(Number(limit)).lean();
     } else {
@@ -48,22 +48,22 @@ export default class BaseMongoDao<InputT, OutputT> {
   public findOneAndUpdate = async (filter: any, data: any): Promise<OutputT> => {
     const result = await this.model.findOneAndUpdate(filter, data, { new: true, upsert: true });
     return result;
-  }
+  };
 
   public findOneAndUpdateInsert = async (filter: any, data: any) => {
     const result = await this.model.findOneAndUpdate(filter, data, { new: true }).lean();
     return result;
-  }
+  };
 
   public updateMany = async (filter: any, update: any) => {
     const result = await this.model.updateMany(filter, update);
     return result;
-  }
+  };
 
   public deleteOne = async (filter: any) => {
     const result = await this.model.deleteOne(filter);
     return result;
-  }
+  };
 
   // public startMongoTransaction = () : ClientSession =>  {
   //     return db.startTransaction()

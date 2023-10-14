@@ -4,6 +4,6 @@ export class AppConstants {
   static readonly MODULE_WITH_CACHE = {
     USER: {
       EXPIRY: 3600000,
-    }
-  }
+    },
+  };
 }

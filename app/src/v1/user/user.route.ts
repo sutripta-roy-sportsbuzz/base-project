@@ -8,21 +8,21 @@ export default class UserRouterV1 extends BaseRouter {
     super(UserController, {
       post: {
         validationSchema: createSchema,
-        validationKey: 'body'
+        validationKey: 'body',
       },
       get: {
         validationSchema: identitySchema,
-        validationKey: 'params'
+        validationKey: 'params',
       },
       patch: {
-        validationSchema: [ identitySchema, userUpdationSchema ],
-        validationKey: [ 'params', 'body' ]
+        validationSchema: [identitySchema, userUpdationSchema],
+        validationKey: ['params', 'body'],
       },
       delete: {
         validationSchema: identitySchema,
-        validationKey: 'params'
-      }
-    })
+        validationKey: 'params',
+      },
+    });
 
     this.initializeRoutes();
   }
@@ -30,5 +30,5 @@ export default class UserRouterV1 extends BaseRouter {
   initializeRoutes = (): void => {
     this.router.route('/login').post(this.controller.login);
     this.router.route('/registration').post(this.controller.registration);
-  }
+  };
 }

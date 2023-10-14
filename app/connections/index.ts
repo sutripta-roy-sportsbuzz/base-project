@@ -1,9 +1,16 @@
+import MySQLConnection from './sequelize/mysqlConnector';
+import MongoDBConnection from './mongoDB';
 import RedisConnection from './redis';
-import MongoDBConnection from './mongo';
 
 export default class ConnectionsInitiator {
+  static initSequelize() {
+    MySQLConnection.createMySQLConnection();
+    const { Sequelize, sequelize } = MySQLConnection.getMySQLConnection();
+    return { Sequelize, sequelize };
+  }
+
   static async initConnections() {
-    await RedisConnection.createRedisConnection();
     await MongoDBConnection.createMongoDBConnection();
+    await RedisConnection.createRedisConnection();
   }
 }

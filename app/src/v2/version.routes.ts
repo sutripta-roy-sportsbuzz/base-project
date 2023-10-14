@@ -13,5 +13,5 @@ export default class RouterV2 {
 
   initializeRoutes = (): void => {
     this.router.use('/user', new UserRouterV2().router);
-  }
+  };
 }

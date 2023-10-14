@@ -7,7 +7,7 @@ import { Responses } from '../../../enums/responses';
 
 export default class LoginLogsController extends BaseController {
   constructor() {
-    super(LoginLogsService, loginLogsCreationResponseSchema, 'Login Logs')
+    super(LoginLogsService, loginLogsCreationResponseSchema, 'Login Logs');
   }
 
   public getById = async (req: Request, res: Response, next: NextFunction) => {

@@ -17,7 +17,7 @@ class Course {
   }
 
   getCourseName() {
-    console.log(this.test)
+    console.log(this.test);
     return this.name;
   }
 }

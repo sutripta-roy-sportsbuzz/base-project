@@ -6,6 +6,6 @@ import { userDetailsResponseSchema } from './user.dto';
 
 export default class UserService extends BaseSequelizeService<UserModelInput, UserModelOutput> {
   constructor() {
-    super(UserSequelizeDao, 'USER', UserRedisDao, userDetailsResponseSchema)
+    super(UserSequelizeDao, 'USER', UserRedisDao, userDetailsResponseSchema);
   }
 }

@@ -4,7 +4,7 @@ export default class BaseCacheDao {
   public redisClient: RedisClient;
 
   constructor(redisClient?: any, options: any = {}) {
-    console.log(options)
+    console.log(options);
     if (!redisClient) {
       throw new Error('Redis Client Must Required');
     }

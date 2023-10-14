@@ -22,13 +22,14 @@ const HandleHTTPErrors = (err: HttpException, req: Request, res: Response, next:
 };
 
 const HandleGeneralErrors = (err: any, _req: any, res: Response, _next: NextFunction) => {
+  console.log(_next);
   console.log(err);
   if (process.env.NODE_ENV === 'production') {
     // sentry
     const Sentry = SentryConnection.createSentryConnection();
     Sentry.captureMessage(err);
   }
-  return res.status(500).send({ success: false, message: Responses.SOMETHING_WENT_WRONG, error: Responses.INTERNAL_SERVER_ERROR })
-}
+  return res.status(500).send({ success: false, message: Responses.SOMETHING_WENT_WRONG, error: Responses.INTERNAL_SERVER_ERROR });
+};
 
 export { HandleHTTPErrors, HandleGeneralErrors };

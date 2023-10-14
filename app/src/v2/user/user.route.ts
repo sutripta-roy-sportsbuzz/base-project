@@ -15,5 +15,5 @@ export default class UserRouterV2 {
 
   initializeRoutes = (): void => {
     this.router.route('/:id').get(this.userController.getById);
-  }
+  };
 }
